@@ -1,11 +1,21 @@
 import React from 'react';
+import {FilterType} from "../App";
 
-export const ButtonsForFiltering = () => {
+type ButtonsForFilteringPropsType = {
+    callback: (filter: FilterType) => void
+}
+
+export const ButtonsForFiltering = ({callback}: ButtonsForFilteringPropsType) => {
+
+    const onClickHandler = (filter: FilterType) => {
+        callback(filter)
+    }
+
     return (
         <>
-            <button>All</button>
-            <button>Active</button>
-            <button>Completed</button>
+            <button onClick={() => onClickHandler('all')}> All</button>
+            <button onClick={() => onClickHandler('active')}>Active</button>
+            <button onClick={() => onClickHandler('completed')}>Completed</button>
         </>
 
     );
