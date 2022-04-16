@@ -1,5 +1,5 @@
 import React from 'react';
-import {FilterType} from "../App";
+import {FilterType} from "../../App";
 
 type ButtonsForFilteringPropsType = {
     callback: (filter: FilterType) => void

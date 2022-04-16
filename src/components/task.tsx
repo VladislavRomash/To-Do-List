@@ -1,22 +1,22 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
+import {TaskType} from "../App";
+import {Checkbox} from "./universalComponents/checkbox";
 
 type TaskPropsType = {
-    taskID: string
-    title: string
-    isDone: boolean
+    task: TaskType
     callback: (taskID: string, value: boolean) => void
 }
 
-export const Task = ({taskID, title, isDone, callback}: TaskPropsType) => {
+export const Task = ({task, callback}: TaskPropsType) => {
 
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        callback(taskID, e.currentTarget.checked)
+    const changeStatusCheckbox = (value: boolean) => {
+        callback(task.id, value)
     }
 
     return (
         <li>
-            <input type="checkbox" checked={isDone} onChange={onChangeHandler}/>
-            <span>{title}</span>
+            <Checkbox changeStatusCheckbox={changeStatusCheckbox} initialValue={task.isDone}/>
+            <span>{task.title}</span>
         </li>
     );
 };

@@ -1,53 +1,48 @@
 import React from 'react';
 import {Header} from "./header";
-import {UniversalInput} from "./universalInput";
-import {ButtonsForFiltering} from "./buttonsForFiltering";
-import {FilterType, TaskStateType} from "../App";
+import {UniversalInput} from "./universalComponents/universalInput";
+import {ButtonsForFiltering} from "./universalComponents/buttonsForFiltering";
+import {FilterType, TaskStateType, TodolistType} from "../App";
 import {Task} from "./task";
 
 type TodolistPropsType = {
     task: TaskStateType
-    todolistID: string
-    title: string
+    todolist: TodolistType
     addNewTask: (todolistID: string, title: string) => void
     changeStatusTask: (todolistID: string, taskID: string, value: boolean) => void
-    filter: FilterType
     changeFilterTodo: (todolistID: string, filter: FilterType) => void
 }
 
 export const Todolist = ({
                              task,
-                             todolistID,
-                             title,
+                             todolist,
                              addNewTask,
                              changeStatusTask,
-                             filter,
-                             changeFilterTodo
+                             changeFilterTodo,
                          }: TodolistPropsType) => {
 
     const addTask = (title: string) => {
-        addNewTask(todolistID, title)
+        addNewTask(todolist.id, title)
     }
     const changeStatus = (taskID: string, value: boolean) => {
-        changeStatusTask(todolistID, taskID, value)
+        changeStatusTask(todolist.id, taskID, value)
     }
     const changeFilter = (filter: FilterType) => {
-        changeFilterTodo(todolistID, filter)
+        changeFilterTodo(todolist.id, filter)
     }
 
-    let taskFiltered = task[todolistID]
-    if (filter === 'active') {
+    let taskFiltered = task[todolist.id]
+    if (todolist.filter === 'active') {
         taskFiltered = taskFiltered.filter(f => !f.isDone)
     }
-    if (filter === 'completed') {
+    if (todolist.filter === 'completed') {
         taskFiltered = taskFiltered.filter(f => f.isDone)
     }
-
 
     return (
         <div>
             <div>
-                <Header title={title}/>
+                <Header title={todolist.title}/>
             </div>
             <div>
                 <UniversalInput callback={addTask}/>
@@ -55,9 +50,7 @@ export const Todolist = ({
             <ul>
                 {
                     taskFiltered.map(m => <Task key={m.id}
-                                                taskID={m.id}
-                                                title={m.title}
-                                                isDone={m.isDone}
+                                                task={m}
                                                 callback={changeStatus}
                     />)
                 }

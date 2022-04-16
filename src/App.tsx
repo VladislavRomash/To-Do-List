@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {Todolist} from "./components/todolist";
 import {v1} from "uuid";
+import {UniversalInput} from "./components/universalComponents/universalInput";
+import {addTaskAC, changeStatusTaskAC, taskReducer} from "./reducers/task-reducer";
+import {addNewTodoAC, changeFilterTodoAC, todolistReducer} from "./reducers/todolist-reducer";
 
 export type FilterType = 'all' | 'active' | 'completed'
 export type TodolistType = {
@@ -15,17 +18,18 @@ export type TaskType = {
     isDone: boolean
 }
 export type TaskStateType = {
-    [key: string]: TaskType[]
+    [todolistID: string]: TaskType[]
 }
 
 export const App = () => {
-    const todolistID1 = v1()
 
-    const [todolist, setTodolist] = useState<TodolistType[]>([
-        {id: todolistID1, title: 'What to learn', filter: 'all'},
+    const todolistID = v1()
+
+    const [todolist, dispatchTodolist] = useReducer(todolistReducer, [
+        {id: todolistID, title: 'What to learn', filter: 'all'},
     ])
-    const [task, setTask] = useState<TaskStateType>({
-        [todolistID1]: [
+    const [task, dispatchTask] = useReducer(taskReducer, {
+        [todolistID]: [
             {id: v1(), title: 'HTML', isDone: true},
             {id: v1(), title: 'JS', isDone: false},
             {id: v1(), title: 'React', isDone: true},
@@ -33,26 +37,29 @@ export const App = () => {
     })
 
     const addNewTask = (todolistID: string, title: string) => {
-        const newTask = {id: v1(), title, isDone: false}
-        setTask({[todolistID]: [newTask, ...task[todolistID]]})
+        dispatchTask(addTaskAC(todolistID, title))
     }
     const changeStatusTask = (todolistID: string, taskID: string, value: boolean) => {
-        setTask({[todolistID]: task[todolistID].map(m => m.id === taskID ? {...m, isDone: value} : m)})
+        dispatchTask(changeStatusTaskAC(todolistID, taskID, value))
     }
     const changeFilterTodo = (todolistID: string, filter: FilterType) => {
-        setTodolist(todolist.map(m => m.id === todolistID ? {...m, filter} : m))
+        dispatchTodolist(changeFilterTodoAC(todolistID, filter))
+    }
+    const addNewTodo = (title: string) => {
+        const dispatch = addNewTodoAC(title)
+        dispatchTodolist(dispatch)
+        dispatchTask(dispatch)
     }
 
     return (
         <div className="App">
+            <UniversalInput callback={addNewTodo}/>
             {
                 todolist.map(m => <Todolist key={m.id}
+                                            todolist={m}
                                             task={task}
-                                            todolistID={m.id}
-                                            title={m.title}
                                             addNewTask={addNewTask}
                                             changeStatusTask={changeStatusTask}
-                                            filter={m.filter}
                                             changeFilterTodo={changeFilterTodo}
                 />)
             }
