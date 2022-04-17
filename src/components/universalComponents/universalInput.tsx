@@ -13,7 +13,7 @@ export const UniversalInput = ({callback}: UniversalInputPropsType) => {
 
     const onClickHandler = () => {
         if (value.trim() !== '') {
-            callback(value)
+            callback(value.trim())
             setValue('')
         } else {
             setError(true)

@@ -6,6 +6,6 @@ type HeaderPropsType = {
 
 export const Header = ({title}: HeaderPropsType) => {
     return (
-        <h3>{title}</h3>
+        <strong>{title}</strong>
     );
 };

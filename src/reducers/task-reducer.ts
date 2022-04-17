@@ -5,6 +5,7 @@ import {AddTodoType} from "./todolist-reducer";
 type ActionType = AddType
     | ChangeStatusType
     | AddTodoType
+    | DeleteTaskType
 
 export const taskReducer = (state: TaskStateType, action: ActionType): TaskStateType => {
     switch (action.type) {
@@ -12,12 +13,20 @@ export const taskReducer = (state: TaskStateType, action: ActionType): TaskState
             const newTask: TaskType = {id: v1(), title: action.payload.title, isDone: false}
             return {...state, [action.payload.todolistID]: [newTask, ...state[action.payload.todolistID]]}
         }
+        case "DELETE-TASK": {
+            return {
+                ...state,
+                [action.payload.todolistID]: state[action.payload.todolistID]
+                    .filter(f => f.id !== action.payload.taskID)
+            }
+        }
         case "CHANGE-STATUS": {
             return {
                 ...state,
-                [action.payload.todolistID]: state[action.payload.todolistID].map(m => m.id === action.payload.taskID ? {
-                    ...m, isDone: action.payload.value
-                } : m)
+                [action.payload.todolistID]: state[action.payload.todolistID]
+                    .map(m => m.id === action.payload.taskID ? {
+                        ...m, isDone: action.payload.value
+                    } : m)
             }
         }
         case "ADD-TODOLIST": {
@@ -33,6 +42,14 @@ export const addTaskAC = (todolistID: string, title: string) => {
     return {
         type: 'ADD-TASK',
         payload: {todolistID, title}
+    } as const
+}
+
+type DeleteTaskType = ReturnType<typeof deleteTaskAC>
+export const deleteTaskAC = (todolistID: string, taskID: string) => {
+    return {
+        type: 'DELETE-TASK',
+        payload: {todolistID, taskID}
     } as const
 }
 

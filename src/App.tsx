@@ -3,8 +3,8 @@ import './App.css';
 import {Todolist} from "./components/todolist";
 import {v1} from "uuid";
 import {UniversalInput} from "./components/universalComponents/universalInput";
-import {addTaskAC, changeStatusTaskAC, taskReducer} from "./reducers/task-reducer";
-import {addNewTodoAC, changeFilterTodoAC, todolistReducer} from "./reducers/todolist-reducer";
+import {addTaskAC, changeStatusTaskAC, deleteTaskAC, taskReducer} from "./reducers/task-reducer";
+import {addNewTodoAC, changeFilterTodoAC, deleteTodo, todolistReducer} from "./reducers/todolist-reducer";
 
 export type FilterType = 'all' | 'active' | 'completed'
 export type TodolistType = {
@@ -39,6 +39,9 @@ export const App = () => {
     const addNewTask = (todolistID: string, title: string) => {
         dispatchTask(addTaskAC(todolistID, title))
     }
+    const deleteTask = (todolistID: string, taskID: string) => {
+        dispatchTask(deleteTaskAC(todolistID, taskID))
+    }
     const changeStatusTask = (todolistID: string, taskID: string, value: boolean) => {
         dispatchTask(changeStatusTaskAC(todolistID, taskID, value))
     }
@@ -49,6 +52,9 @@ export const App = () => {
         const dispatch = addNewTodoAC(title)
         dispatchTodolist(dispatch)
         dispatchTask(dispatch)
+    }
+    const deleteTodolist = (todolistID: string) => {
+        dispatchTodolist(deleteTodo(todolistID))
     }
 
     return (
@@ -61,6 +67,8 @@ export const App = () => {
                                             addNewTask={addNewTask}
                                             changeStatusTask={changeStatusTask}
                                             changeFilterTodo={changeFilterTodo}
+                                            deleteTask={deleteTask}
+                                            deleteTodolist={deleteTodolist}
                 />)
             }
         </div>
