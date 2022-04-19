@@ -4,6 +4,7 @@ import {v1} from "uuid";
 type ActionType = ChangeFilterType
     | AddTodoType
     | DeleteTodoType
+    | ChangeTitleType
 
 const initialState: TodolistType[] = []
 
@@ -18,6 +19,9 @@ export const todolistReducer = (state: TodolistType[] = initialState, action: Ac
         }
         case "DELETE-TODOLIST": {
             return state.filter(f => f.id !== action.todoID)
+        }
+        case "CHANGE-TITLE-TODO": {
+            return state.map(m => m.id === action.todoID ? {...m, title: action.newTitle} : m)
         }
         default:
             return state
@@ -43,5 +47,12 @@ export type DeleteTodoType = ReturnType<typeof deleteTodoAC>
 export const deleteTodoAC = (todolistID: string) => {
     return {
         type: 'DELETE-TODOLIST', todoID: todolistID
+    } as const
+}
+
+type ChangeTitleType = ReturnType<typeof changeTitleAC>
+export const changeTitleAC = (todolistID: string, value: string) => {
+    return {
+        type: 'CHANGE-TITLE-TODO', todoID: todolistID, newTitle: value
     } as const
 }

@@ -35,7 +35,7 @@ export const App = () => {
             <UniversalInput callback={addNewTodo}/>
             {
                 todo.map(m => <Todolist key={m.id}
-                                        todolist={m}
+                                        todolistID={m.id}
                 />)
             }
         </div>

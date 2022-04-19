@@ -7,6 +7,7 @@ type ActionType = AddType
     | AddTodoType
     | DeleteTaskType
     | DeleteTodoType
+    | ChangeTitleType
 
 const initialState: TaskStateType = {}
 
@@ -30,6 +31,12 @@ export const taskReducer = (state: TaskStateType = initialState, action: ActionT
                     .map(m => m.id === action.payload.taskID ? {
                         ...m, isDone: action.payload.value
                     } : m)
+            }
+        }
+        case "CHANGE-TITLE-TASK": {
+            return {
+                ...state, [action.payload.todolistID]: state[action.payload.todolistID]
+                    .map(m => m.id === action.payload.taskID ? {...m, title: action.payload.value} : m)
             }
         }
         case "ADD-TODOLIST": {
@@ -65,6 +72,14 @@ type ChangeStatusType = ReturnType<typeof changeStatusTaskAC>
 export const changeStatusTaskAC = (todolistID: string, taskID: string, value: boolean) => {
     return {
         type: 'CHANGE-STATUS',
+        payload: {todolistID, taskID, value}
+    } as const
+}
+
+type ChangeTitleType = ReturnType<typeof changeTitleTaskAC>
+export const changeTitleTaskAC = (todolistID: string, taskID: string, value: string) => {
+    return {
+        type: 'CHANGE-TITLE-TASK',
         payload: {todolistID, taskID, value}
     } as const
 }

@@ -2,26 +2,36 @@ import React from 'react';
 import {TaskType} from "../App";
 import {Checkbox} from "./universalComponents/checkbox";
 import {ButtonForDelete} from "./universalComponents/buttonForDelete";
+import {ChangeTitle} from "./universalComponents/changeTitle";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../state/store";
+import {changeStatusTaskAC, changeTitleTaskAC, deleteTaskAC} from "../reducers/task-reducer";
 
 type TaskPropsType = {
-    task: TaskType
-    callback: (taskID: string, value: boolean) => void
-    deleteTas: (taskID: string) => void
+    todolistID: string
+    taskID: string
 }
 
-export const Task = ({task, callback, deleteTas}: TaskPropsType) => {
+export const Task = ({todolistID, taskID}: TaskPropsType) => {
+
+    const task = useSelector<AppRootStateType, TaskType>(state => state.tasks[todolistID]
+        .filter(f => f.id === taskID)[0])
+    const dispatch = useDispatch()
 
     const changeStatusCheckbox = (value: boolean) => {
-        callback(task.id, value)
+        dispatch(changeStatusTaskAC(todolistID, taskID, value))
     }
     const deleteTasks = () => {
-        deleteTas(task.id)
+        dispatch(deleteTaskAC(todolistID, taskID))
+    }
+    const changeTitleTask = (value: string) => {
+        dispatch(changeTitleTaskAC(todolistID, taskID, value))
     }
 
     return (
         <li>
             <Checkbox changeStatusCheckbox={changeStatusCheckbox} initialValue={task.isDone}/>
-            <span>{task.title}</span>
+            <ChangeTitle callback={changeTitleTask} title={task.title}/>
             <ButtonForDelete callback={deleteTasks}/>
         </li>
     );
