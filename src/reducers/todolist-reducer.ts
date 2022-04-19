@@ -5,7 +5,9 @@ type ActionType = ChangeFilterType
     | AddTodoType
     | DeleteTodoType
 
-export const todolistReducer = (state: TodolistType[], action: ActionType): TodolistType[] => {
+const initialState: TodolistType[] = []
+
+export const todolistReducer = (state: TodolistType[] = initialState, action: ActionType): TodolistType[] => {
     switch (action.type) {
         case "CHANGE-FILTER": {
             return state.map(m => m.id === action.todoID ? {...m, filter: action.todoFilter} : m)
@@ -37,8 +39,8 @@ export const addNewTodoAC = (title: string) => {
     } as const
 }
 
-type DeleteTodoType = ReturnType<typeof deleteTodo>
-export const deleteTodo = (todolistID: string) => {
+export type DeleteTodoType = ReturnType<typeof deleteTodoAC>
+export const deleteTodoAC = (todolistID: string) => {
     return {
         type: 'DELETE-TODOLIST', todoID: todolistID
     } as const
