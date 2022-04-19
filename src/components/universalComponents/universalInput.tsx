@@ -1,5 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import s from './module_css/universalInput.module.css'
+import {Button} from "@mui/material";
+import SendIcon from '@material-ui/icons/Send';
 
 
 type UniversalInputPropsType = {
@@ -36,7 +38,7 @@ export const UniversalInput = ({callback}: UniversalInputPropsType) => {
                    onKeyPress={onKeyPressHandler}
                    className={error ? s.errorInput : ''}
             />
-            <button onClick={onClickHandler}>+</button>
+            <Button variant="outlined" endIcon={<SendIcon/>} size={'small'} onClick={onClickHandler}>Add</Button>
             <div className={error ? s.errorMessage : ''}>
                 {error && "Title is required"}
             </div>

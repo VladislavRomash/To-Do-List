@@ -1,11 +1,13 @@
 import React from 'react';
 import {FilterType} from "../../App";
+import {Button, Stack} from "@mui/material";
 
 type ButtonsForFilteringPropsType = {
     callback: (filter: FilterType) => void
+    filter: FilterType
 }
 
-export const ButtonsForFiltering = ({callback}: ButtonsForFilteringPropsType) => {
+export const ButtonsForFiltering = ({callback, filter}: ButtonsForFilteringPropsType) => {
 
     const onClickHandler = (filter: FilterType) => {
         callback(filter)
@@ -13,9 +15,14 @@ export const ButtonsForFiltering = ({callback}: ButtonsForFilteringPropsType) =>
 
     return (
         <>
-            <button onClick={() => onClickHandler('all')}> All</button>
-            <button onClick={() => onClickHandler('active')}>Active</button>
-            <button onClick={() => onClickHandler('completed')}>Completed</button>
+            <Stack spacing={1} direction="row">
+                <Button variant={filter === 'all' ? "contained" : 'outlined'} size="small"
+                        onClick={() => onClickHandler('all')}>All</Button>
+                <Button variant={filter === 'active' ? "contained" : 'outlined'} size="small"
+                        onClick={() => onClickHandler('active')}>Active</Button>
+                <Button variant={filter === 'completed' ? "contained" : 'outlined'} size="small"
+                        onClick={() => onClickHandler('completed')}>Completed</Button>
+            </Stack>
         </>
 
     );

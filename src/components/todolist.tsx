@@ -64,7 +64,7 @@ export const Todolist = ({todolistID}: TodolistPropsType) => {
                 }
             </ul>
             <div>
-                <ButtonsForFiltering callback={changeFilter}/>
+                <ButtonsForFiltering callback={changeFilter} filter={todolist.filter}/>
             </div>
         </div>
     );
