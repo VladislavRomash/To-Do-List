@@ -11,7 +11,10 @@ export const ButtonForDelete = ({callback}: ButtonForDeletePropsType) => {
     const onClickHandler = () => callback()
 
     return (
-        <IconButton aria-label="delete" size="small" onClick={onClickHandler}>
+        <IconButton onClick={onClickHandler}
+                    aria-label="delete"
+                    size="small"
+        >
             <DeleteIcon fontSize="small"/>
         </IconButton>
     );
