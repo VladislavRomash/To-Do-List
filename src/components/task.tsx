@@ -1,37 +1,35 @@
-import React, {memo} from 'react';
-import {TaskType} from "../App";
-import {CheckBox} from "./universalComponents/checkBox";
-import {ButtonForDelete} from "./universalComponents/buttonForDelete";
-import {ChangeTitle} from "./universalComponents/changeTitle";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../state/store";
-import {changeStatusTaskAC, changeTitleTaskAC, deleteTaskAC} from "../reducers/task-reducer";
+import React, {memo, useCallback} from 'react';
+import {CheckBox} from './universalComponents/checkBox';
+import {ButtonForDelete} from './universalComponents/buttonForDelete';
+import {ChangeTitle} from './universalComponents/changeTitle';
+import {useDispatch} from 'react-redux';
+import {changeStatusTaskAC, changeTitleTaskAC, deleteTaskAC} from '../reducers/task-reducer';
 
 type TaskPropsType = {
     todolistID: string
     taskID: string
+    title: string
+    isDone: boolean
 }
 
-export const Task = memo(({todolistID, taskID}: TaskPropsType) => {
-    console.log('Task')
-    const task = useSelector<AppRootStateType, TaskType>(state => state.tasks[todolistID]
-        .filter(f => f.id === taskID)[0])
+export const Task = memo(({todolistID, taskID, title, isDone}: TaskPropsType) => {
+
     const dispatch = useDispatch()
 
-    const changeStatusCheckbox = (value: boolean) => {
+    const changeStatusCheckbox = useCallback((value: boolean) => {
         dispatch(changeStatusTaskAC(todolistID, taskID, value))
-    }
-    const deleteTasks = () => {
+    }, [dispatch, todolistID, taskID])
+    const deleteTasks = useCallback(() => {
         dispatch(deleteTaskAC(todolistID, taskID))
-    }
-    const changeTitleTask = (value: string) => {
+    }, [dispatch, todolistID, taskID])
+    const changeTitleTask = useCallback((value: string) => {
         dispatch(changeTitleTaskAC(todolistID, taskID, value))
-    }
+    }, [dispatch, todolistID, taskID])
 
     return (
         <li>
-            <CheckBox changeStatusCheckbox={changeStatusCheckbox} initialValue={task.isDone}/>
-            <ChangeTitle callback={changeTitleTask} title={task.title}/>
+            <CheckBox changeStatusCheckbox={changeStatusCheckbox} initialValue={isDone}/>
+            <ChangeTitle callback={changeTitleTask} title={title}/>
             <ButtonForDelete callback={deleteTasks}/>
         </li>
     );

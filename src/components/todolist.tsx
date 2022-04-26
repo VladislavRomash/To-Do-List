@@ -1,8 +1,8 @@
-import React, {memo} from 'react';
+import React, {memo, useCallback} from 'react';
 import {ChangeTitle} from './universalComponents/changeTitle';
 import {UniversalInput} from './universalComponents/universalInput';
 import {ButtonsForFiltering} from './universalComponents/buttonsForFiltering';
-import {FilterType, TaskType, TodolistType} from '../App';
+import {FilterType, TaskType} from '../App';
 import {Task} from './task';
 import {ButtonForDelete} from './universalComponents/buttonForDelete';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,62 +12,62 @@ import {changeFilterTodoAC, changeTitleAC, deleteTodoAC} from '../reducers/todol
 
 type TodolistPropsType = {
     todolistID: string
+    title: string
+    filter: FilterType
 }
 
-export const Todolist = memo(({todolistID}: TodolistPropsType) => {
+export const Todolist = memo(({todolistID, title, filter}: TodolistPropsType) => {
 
-    console.log('Todolist')
+        let task = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[todolistID])
+        const dispatch = useDispatch()
 
-    const todolist = useSelector<AppRootStateType, TodolistType>(state => state.todolist
-        .filter(f => f.id === todolistID)[0])
-    let task = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[todolist.id])
-    const dispatch = useDispatch()
+        const addTask = useCallback((title: string) => {
+            dispatch(addTaskAC(todolistID, title))
+        }, [dispatch, todolistID])
+        const deleteTodo = useCallback(() => {
+            dispatch(deleteTodoAC(todolistID))
+        }, [dispatch, todolistID])
+        const changeFilter = useCallback((filter: FilterType) => {
+            dispatch(changeFilterTodoAC(todolistID, filter))
+        }, [dispatch, todolistID])
+        const changeTitleTodo = useCallback((value: string) => {
+            dispatch(changeTitleAC(todolistID, value))
+        }, [dispatch, todolistID])
 
+        let taskFiltered = task
+        if (filter === 'active') {
+            taskFiltered = taskFiltered.filter(f => !f.isDone)
+        }
+        if (filter === 'completed') {
+            taskFiltered = taskFiltered.filter(f => f.isDone)
+        }
 
-    const addTask = (title: string) => {
-        dispatch(addTaskAC(todolist.id, title))
-    }
-    const deleteTodo = () => {
-        dispatch(deleteTodoAC(todolist.id))
-    }
-    const changeFilter = (filter: FilterType) => {
-        dispatch(changeFilterTodoAC(todolist.id, filter))
-    }
-    const changeTitleTodo = (value: string) => {
-        dispatch(changeTitleAC(todolist.id, value))
-    }
-
-    let taskFiltered = task
-    if (todolist.filter === 'active') {
-        taskFiltered = taskFiltered.filter(f => !f.isDone)
-    }
-    if (todolist.filter === 'completed') {
-        taskFiltered = taskFiltered.filter(f => f.isDone)
-    }
-
-    return (
-        <div>
-            <div style={{paddingBottom: '10px'}}>
-                <h3>
-                    <ChangeTitle callback={changeTitleTodo} title={todolist.title}/>
-                    <ButtonForDelete callback={deleteTodo}/>
-                </h3>
-            </div>
+        return (
             <div>
-                <UniversalInput callback={addTask}/>
-            </div>
-            <ul>
-                {
-                    taskFiltered.map(m => <Task key={m.id}
-                                                taskID={m.id}
-                                                todolistID={todolistID}
+                <div style={{paddingBottom: '10px'}}>
+                    <h3>
+                        <ChangeTitle callback={changeTitleTodo} title={title}/>
+                        <ButtonForDelete callback={deleteTodo}/>
+                    </h3>
+                </div>
+                <div>
+                    <UniversalInput callback={addTask}/>
+                </div>
+                <ul>
+                    {
+                        taskFiltered.map(m => <Task key={m.id}
+                                                    taskID={m.id}
+                                                    title={m.title}
+                                                    isDone={m.isDone}
+                                                    todolistID={todolistID}
 
-                    />)
-                }
-            </ul>
-            <div>
-                <ButtonsForFiltering callback={changeFilter} filter={todolist.filter}/>
+                        />)
+                    }
+                </ul>
+                <div>
+                    <ButtonsForFiltering callback={changeFilter} filter={filter}/>
+                </div>
             </div>
-        </div>
-    );
-})
+        );
+    }
+)

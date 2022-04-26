@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import {Todolist} from './components/todolist';
 import {UniversalInput} from './components/universalComponents/universalInput';
@@ -25,14 +25,12 @@ export type TaskStateType = {
 
 export const App = () => {
 
-    console.log('App')
+    let todolist = useSelector<AppRootStateType, TodolistType[]>(state => state.todolist)
+    let dispatch = useDispatch()
 
-    let todo = useSelector<AppRootStateType, TodolistType[]>(state => state.todolist)
-    const dispatch = useDispatch()
-
-    const addNewTodo = (title: string) => {
+    const addNewTodo = useCallback((title: string) => {
         dispatch(addNewTodoAC(title))
-    }
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -43,11 +41,13 @@ export const App = () => {
                 </Grid>
                 <Grid container spacing={3}>
                     {
-                        todo.map(m => {
+                        todolist.map(m => {
                                 return <Grid item key={m.id}>
                                     <Paper style={{padding: '10px'}}>
                                         <Todolist key={m.id}
                                                   todolistID={m.id}
+                                                  title={m.title}
+                                                  filter={m.filter}
                                         />
                                     </Paper>
                                 </Grid>
