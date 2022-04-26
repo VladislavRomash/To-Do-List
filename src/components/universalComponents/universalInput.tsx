@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {Button, TextField} from "@mui/material";
+import {Button, TextField} from '@mui/material';
 import {AddBox} from '@material-ui/icons';
 
 
@@ -8,6 +8,8 @@ type UniversalInputPropsType = {
 }
 
 export const UniversalInput = ({callback}: UniversalInputPropsType) => {
+
+    console.log('Input')
 
     const [value, setValue] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
@@ -39,15 +41,15 @@ export const UniversalInput = ({callback}: UniversalInputPropsType) => {
                        id="outlined-basic"
                        label="Input your task"
                        variant="outlined"
-                       helperText={error && "Title is required"}
+                       helperText={error && 'Title is required'}
                        size={'small'}
             />
             <Button onClick={onClickHandler}
                     variant="outlined"
-                    style={{height: '40px', border: "none"}}
+                    style={{height: '40px', border: 'none'}}
             >
                 <AddBox/>
             </Button>
         </div>
     );
-};
+}

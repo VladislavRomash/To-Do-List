@@ -1,26 +1,28 @@
-import React from 'react';
-import {ChangeTitle} from "./universalComponents/changeTitle";
-import {UniversalInput} from "./universalComponents/universalInput";
-import {ButtonsForFiltering} from "./universalComponents/buttonsForFiltering";
-import {FilterType, TaskType, TodolistType} from "../App";
-import {Task} from "./task";
-import {ButtonForDelete} from "./universalComponents/buttonForDelete";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../state/store";
-import {addTaskAC} from "../reducers/task-reducer";
-import {changeFilterTodoAC, changeTitleAC, deleteTodoAC} from "../reducers/todolist-reducer";
+import React, {memo} from 'react';
+import {ChangeTitle} from './universalComponents/changeTitle';
+import {UniversalInput} from './universalComponents/universalInput';
+import {ButtonsForFiltering} from './universalComponents/buttonsForFiltering';
+import {FilterType, TaskType, TodolistType} from '../App';
+import {Task} from './task';
+import {ButtonForDelete} from './universalComponents/buttonForDelete';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from '../state/store';
+import {addTaskAC} from '../reducers/task-reducer';
+import {changeFilterTodoAC, changeTitleAC, deleteTodoAC} from '../reducers/todolist-reducer';
 
 type TodolistPropsType = {
     todolistID: string
 }
 
-export const Todolist = ({todolistID}: TodolistPropsType) => {
+export const Todolist = memo(({todolistID}: TodolistPropsType) => {
+
+    console.log('Todolist')
 
     const todolist = useSelector<AppRootStateType, TodolistType>(state => state.todolist
         .filter(f => f.id === todolistID)[0])
     let task = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[todolist.id])
-
     const dispatch = useDispatch()
+
 
     const addTask = (title: string) => {
         dispatch(addTaskAC(todolist.id, title))
@@ -68,4 +70,4 @@ export const Todolist = ({todolistID}: TodolistPropsType) => {
             </div>
         </div>
     );
-};
+})

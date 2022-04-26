@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {TaskType} from "../App";
 import {CheckBox} from "./universalComponents/checkBox";
 import {ButtonForDelete} from "./universalComponents/buttonForDelete";
@@ -12,8 +12,8 @@ type TaskPropsType = {
     taskID: string
 }
 
-export const Task = ({todolistID, taskID}: TaskPropsType) => {
-
+export const Task = memo(({todolistID, taskID}: TaskPropsType) => {
+    console.log('Task')
     const task = useSelector<AppRootStateType, TaskType>(state => state.tasks[todolistID]
         .filter(f => f.id === taskID)[0])
     const dispatch = useDispatch()
@@ -35,4 +35,4 @@ export const Task = ({todolistID, taskID}: TaskPropsType) => {
             <ButtonForDelete callback={deleteTasks}/>
         </li>
     );
-};
+})
