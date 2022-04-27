@@ -9,8 +9,6 @@ type UniversalInputPropsType = {
 
 export const UniversalInput = memo(({callback}: UniversalInputPropsType) => {
 
-        console.log('Input')
-
         const [value, setValue] = useState<string>('')
         const [error, setError] = useState<boolean>(false)
 

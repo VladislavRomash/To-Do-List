@@ -45,9 +45,7 @@ export const App = () => {
                                 return <Grid item key={m.id}>
                                     <Paper style={{padding: '10px'}}>
                                         <Todolist key={m.id}
-                                                  todolistID={m.id}
-                                                  title={m.title}
-                                                  filter={m.filter}
+                                                  todolist={m}
                                         />
                                     </Paper>
                                 </Grid>

@@ -4,32 +4,31 @@ import {ButtonForDelete} from './universalComponents/buttonForDelete';
 import {ChangeTitle} from './universalComponents/changeTitle';
 import {useDispatch} from 'react-redux';
 import {changeStatusTaskAC, changeTitleTaskAC, deleteTaskAC} from '../reducers/task-reducer';
+import {TaskType} from '../App';
 
 type TaskPropsType = {
     todolistID: string
-    taskID: string
-    title: string
-    isDone: boolean
+    task: TaskType
 }
 
-export const Task = memo(({todolistID, taskID, title, isDone}: TaskPropsType) => {
+export const Task = memo(({todolistID, task}: TaskPropsType) => {
 
     const dispatch = useDispatch()
 
     const changeStatusCheckbox = useCallback((value: boolean) => {
-        dispatch(changeStatusTaskAC(todolistID, taskID, value))
-    }, [dispatch, todolistID, taskID])
+        dispatch(changeStatusTaskAC(todolistID, task.id, value))
+    }, [dispatch, todolistID, task.id])
     const deleteTasks = useCallback(() => {
-        dispatch(deleteTaskAC(todolistID, taskID))
-    }, [dispatch, todolistID, taskID])
+        dispatch(deleteTaskAC(todolistID, task.id))
+    }, [dispatch, todolistID, task.id])
     const changeTitleTask = useCallback((value: string) => {
-        dispatch(changeTitleTaskAC(todolistID, taskID, value))
-    }, [dispatch, todolistID, taskID])
+        dispatch(changeTitleTaskAC(todolistID, task.id, value))
+    }, [dispatch, todolistID, task.id])
 
     return (
         <li>
-            <CheckBox changeStatusCheckbox={changeStatusCheckbox} initialValue={isDone}/>
-            <ChangeTitle callback={changeTitleTask} title={title}/>
+            <CheckBox changeStatusCheckbox={changeStatusCheckbox} initialValue={task.isDone}/>
+            <ChangeTitle callback={changeTitleTask} title={task.title}/>
             <ButtonForDelete callback={deleteTasks}/>
         </li>
     );
